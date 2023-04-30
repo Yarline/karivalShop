@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block stylesheets %}
+
+{% endblock %}
+
+{% block body %}
+<section class="cartCardContainer">
+
+<h1>Bienvenue {% if currentUser.firstname && currentUser.name %}  {% endif %}</h1>
+
+
+</section>
+{% endblock %}
+

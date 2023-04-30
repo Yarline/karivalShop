@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos produits{% endblock %}
+
+{% block body %}
+
+{% block stylesheets %}
+<style>
+
+    .newProduct {
+        padding: 3% 10%;
+    }
+
+    .section_title {
+        font-size: 2em;
+        font-family: serif;
+        font-style: italic;
+    }
+
+    .about small {
+        font-style: italic;
+        margin-bottom: 50px;
+    }
+
+    .card_container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .card {
+        width: 25%;
+        min-width: 200px;
+        border-radius: 10px;
+    }
+
+    .card figure {
+        width: 100%;
+        object-fit: cover;
+        height: 350px;
+    }
+
+    .card figure img {
+        width: 100%;
+        height: 100%;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
+    .card_content{
+        padding: 10px;
+    }
+
+    .btn_full{
+        color: #fff;
+        background-color: #000;
+        box-shadow: 2px 2px 2px 1px grey;
+        text-transform: uppercase;	
+        border-radius: none !important;
+        text-transform: uppercase;
+
+    }
+
+    .btn_link{
+        border: none;
+        outline: none;
+    }
+    .btn_link:focus {
+        border: none;
+        outline: none;
+    }
+
+</style>
+
+{% endblock %}
+
+<section class="newProduct">
+    <h2 class="section_title mb-3">Nos produits</h2>
+
+    <div class="card_container">
+        {% for p in products %}
+        <div class="card">
+            <figure><img src="{{ asset('uploads/' ~ p.image) }}" alt=""></figure>
+            <div class="card_content">
+                <h3>{{p.name}}</h3>
+                    {% if p.stock == 0 %} <small class="text-secondary"><b>Epuisé</b> </small>{% endif %}
+                    {% if p.stock <= 3 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
+                    {% if p.stock > 3 %} <small class="text-success"><b>En stock </b></small>{% endif %}
+                <p>{{p.price}}</p>
+                <a href="{{path('app_product', {'id':p.id})}}" class="btn btn_full">
+                    Consulter
+                </a>
+                {% if p.stock == 0 %}
+                    <button type="button" class="btn_link" onclick="addInCart({{p.id}})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                {% else %}
+                    <button type="button" class="btn_link disable" data-target="#stockModal"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                {% endif %}
+                
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center">
+            <td colspan="5">Aucun produit</td>
+        </p>
+        {% endfor %}
+    </div>
+
+    {# stockModal - bootstrap modal#}
+    <div>
+        <h4 class="text-center"> En rupture de stock<h4>
+        <p>Impossible d'ajouter le produit au panier car il n'est plus en stock</p>
+        {# icone #}
+    </div>
+
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    async function addInCart(id) {
+        $.ajax({
+            method: "POST",
+            url: "/cart/" + id,
+            async: true,
+        })
+            .then(response => {
+
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+</script>
+
+{% endblock %}

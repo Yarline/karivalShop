@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .cartCardContainer{
+        padding: 2% 5%;
+    }
+
+    .card {
+        width: 100%;
+        border-radius: 10px;
+        box-shadow:2px 2px 3px grey;
+        padding: 2% 5%;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom:15px;
+    }
+
+    .card figure {
+        width: 25%;
+        object-fit: cover;
+        height: 200px;
+    }
+
+    .card figure img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .payment{
+        text-align: right;
+        margin-top:50px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<section class="cartCardContainer">
+    <h2 class="mb-5">Mon panier</h2>
+
+    {% for item in contentCart %}
+        {% set product = item.product[0] %}
+        {% set totalLine = product.price * item.quantity %}
+        <div class="card">
+            <figure><img src="{{ asset('uploads/' ~ product.image) }}" alt=""></figure>
+            
+            <div>
+                <h3>{{product.name}}</h3>
+                {% if product.stock == 0 %} <small class="text-secondary"><b>Epuisé</b> </small>{% endif %}
+                {% if product.stock <= 3 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
+                {% if product.stock > 3 %} <small class="text-success"><b>En stock </b></small>{% endif %}
+            </div>
+            <div>
+                <p><i class="fa-solid fa-plus"></i>{# A faire fonction +1 quantité #} {{ item.quantity }} <i class="fa-solid fa-minus"></i>{# A faire fonction -1 quantité #}</p>
+                <p>{{ product.price }} €</p>
+                <p><b>Sous-Total:</b> {{ totalLine }} €</p>
+                <a onclick="deleteContentCart({{item.id}})" ><i class="fa-solid fa-trash"></i></a>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="payment">
+        <p class="text-right mb-3"><b>Total:</b> {{ total }} €</p>
+        <a href="{{ path('app_stripe')}}" class="btn btn-lg btn-dark">Payement</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    async function deleteContentCart(id) {
+        $.ajax({
+            method: "POST",
+            url: "/cart/deleteContentCart/" + id,
+            async: true,
+        })
+            .then(response => {
+
+               location.reload();
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+</script>
+{% endblock %}
