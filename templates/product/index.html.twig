@@ -90,10 +90,12 @@
                 <a href="{{path('app_product', {'id':p.id})}}" class="btn btn_full">
                     Consulter
                 </a>
-                {% if p.stock == 0 %}
-                    <button type="button" class="btn_link" data-toggle="modal" data-target="#stockModal"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>    
-                {% else %}
-                    <button type="button" class="btn_link" onclick="addInCart({{p.id}})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                {% if app.user %}
+                    {% if p.stock == 0 %}
+                        <button type="button" class="btn_link" data-toggle="modal" data-target="#stockModal"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>    
+                    {% else %}
+                        <button type="button" class="btn_link" onclick="addInCart({{p.id}})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                    {% endif %}
                 {% endif %}
                 
             </div>
