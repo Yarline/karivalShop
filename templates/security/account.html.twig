@@ -9,7 +9,25 @@
 {% block body %}
 <section class="cartCardContainer">
 
-<h1>Bienvenue {% if currentUser.firstname && currentUser.name %}  {% endif %}</h1>
+<h1 class="text-center">Bienvenue {% if currentUser.firstname and currentUser.name %} {{ currentUser.firstname }} {{ currentUser.name }} {% endif %}</h1>
+
+<div>
+    <h2>Mes anciennes commandes</h2>
+
+</div>
+
+<div>
+
+    <h1>Modifier le profil</h1>
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.firstname) }}
+        {{ form_row(registrationForm.name) }}
+
+        <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+
+</div>
 
 
 </section>

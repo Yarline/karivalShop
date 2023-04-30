@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Cart;
+use App\Entity\ContentCart;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,14 +21,25 @@ class StripeController extends AbstractController
     }
 
     #[Route('/stripe/payment', name: 'stripe_payment')]
-    public function payment()
+    public function payment(EntityManagerInterface $em)
     {
         $stripeSecretKey = $this->getParameter('stripes_sk');
         \Stripe\Stripe::setApiKey($stripeSecretKey);
 
         try {
             //Calculer le prix du panier
-            $total = 1000; //valeur en centimes = 10euros
+        $user = $this->getUser();
+        $cart = $em->getRepository(Cart::class)->findActiveCart($user);
+        $contentCart = $em->getRepository(ContentCart::class)->findContentCart($cart);
+        $total = 0;
+        foreach ($contentCart as $item) {
+            $quantity = $item->getQuantity();
+            $product = $item->getProduct()->first();
+            $price = $product->getPrice();
+            
+            $contentCartTotal = $quantity * $price;
+            $total += $contentCartTotal;
+        }
         
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([

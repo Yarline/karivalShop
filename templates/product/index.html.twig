@@ -29,9 +29,10 @@
     }
 
     .card {
-        width: 25%;
+        width: 23%;
         min-width: 200px;
         border-radius: 10px;
+        margin: 5px;
     }
 
     .card figure {
@@ -83,16 +84,16 @@
             <div class="card_content">
                 <h3>{{p.name}}</h3>
                     {% if p.stock == 0 %} <small class="text-secondary"><b>Epuisé</b> </small>{% endif %}
-                    {% if p.stock <= 3 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
+                    {% if p.stock <= 3 and p.stock >0 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
                     {% if p.stock > 3 %} <small class="text-success"><b>En stock </b></small>{% endif %}
                 <p>{{p.price}}</p>
                 <a href="{{path('app_product', {'id':p.id})}}" class="btn btn_full">
                     Consulter
                 </a>
                 {% if p.stock == 0 %}
-                    <button type="button" class="btn_link" onclick="addInCart({{p.id}})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                    <button type="button" class="btn_link" data-toggle="modal" data-target="#stockModal"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>    
                 {% else %}
-                    <button type="button" class="btn_link disable" data-target="#stockModal"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
+                    <button type="button" class="btn_link" onclick="addInCart({{p.id}})"><i class="fa-solid fa-cart-plus"></i> Ajouter</button>
                 {% endif %}
                 
             </div>
@@ -104,11 +105,25 @@
         {% endfor %}
     </div>
 
-    {# stockModal - bootstrap modal#}
-    <div>
-        <h4 class="text-center"> En rupture de stock<h4>
-        <p>Impossible d'ajouter le produit au panier car il n'est plus en stock</p>
-        {# icone #}
+    <!-- Modal -->
+    <div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-danger" id="exampleModalLongTitle">En rupture de stock</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="text-center"><i class="fa-solid fa-triangle-exclamation fa-2x"></i></p>
+            <p class="text-center">Impossible d'ajouter le produit au panier car il n'est plus en stock</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
     </div>
 
 </section>

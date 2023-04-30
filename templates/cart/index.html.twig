@@ -51,7 +51,7 @@
             <div>
                 <h3>{{product.name}}</h3>
                 {% if product.stock == 0 %} <small class="text-secondary"><b>Epuisé</b> </small>{% endif %}
-                {% if product.stock <= 3 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
+                {% if product.stock <= 3 and product.stock > 0 %} <small class="text-danger"><b>Bientôt épuisé </b></small>{% endif %}
                 {% if product.stock > 3 %} <small class="text-success"><b>En stock </b></small>{% endif %}
             </div>
             <div>

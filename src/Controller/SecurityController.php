@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -32,11 +34,19 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/account', name: 'app_account')]
-    public function account(EntityManagerInterface $em): Response
+    public function account(EntityManagerInterface $em, Request $r): Response
     {
 
         $user = $this->getUser();
 
+        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form->handleRequest($r);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($user);
+            $em->flush();
+        }
         // $cart = $em->getRepository(Cart::class)->findActiveCart($user);
 
         // $contentCart = $em->getRepository(ContentCart::class)->findContentCart($cart);
@@ -53,8 +63,10 @@ class SecurityController extends AbstractController
 
         return $this->render('security/account.html.twig', [
             'currentUser'  => $user,
+            'registrationForm' => $form->createView(),
             // 'contentCart'  => $contentCart,
             // 'total' => $total,
         ]);
     }
 }
+
