@@ -6,14 +6,23 @@
 
 {% block stylesheets %}
 <style>
+    .darkNav{
+        background-color: #050505;
+        box-shadow: 2px 2px 3px #000;
+        color:#fff!important;
+    }
+
+    .navigationBar{
+        color:#000;
+    }
 
     .newProduct {
-        padding: 3% 10%;
+        margin-top:100px;
+        padding: 5% 10% 10%;
     }
 
     .section_title {
         font-size: 2em;
-        font-family: serif;
         font-style: italic;
     }
 
@@ -33,6 +42,7 @@
         min-width: 200px;
         border-radius: 10px;
         margin: 5px;
+        box-shadow:3px 3px 5px lightgrey;
     }
 
     .card figure {
@@ -75,7 +85,8 @@
 {% endblock %}
 
 <section class="newProduct">
-    <h2 class="section_title mb-3">Nos produits</h2>
+    <h2 class="section_title mb-5">Nos produits</h2>
+    <p class="text-center mb-5 font-italic">- {{ products|length }} articles -</p>
 
     <div class="card_container">
         {% for p in products %}
@@ -121,9 +132,6 @@
             <p class="text-center"><i class="fa-solid fa-triangle-exclamation fa-2x"></i></p>
             <p class="text-center">Impossible d'ajouter le produit au panier car il n'est plus en stock</p>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
         </div>
     </div>
     </div>
@@ -134,18 +142,18 @@
 {% block javascripts %}
 <script>
     async function addInCart(id) {
-        $.ajax({
-            method: "POST",
-            url: "/cart/" + id,
-            async: true,
+        fetch("/cart/" + id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         })
-            .then(response => {
-
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        .then(response => response.json())
+        .then(data => {
+        console.log(data);
+        // faire quelque chose avec les données
+        })
+        .catch(error => console.error(error));
     }
 </script>
 

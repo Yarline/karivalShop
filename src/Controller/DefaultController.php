@@ -18,7 +18,7 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(EntityManagerInterface $em)
     {
-        $products = $em->getRepository(Product::class)->findAll();
+        $products = $em->getRepository(Product::class)->findNewProduct();
         return $this->render('default/index.html.twig', [
            'products'  => $products,
         ]);
@@ -75,6 +75,7 @@ class DefaultController extends AbstractController
                         $content_cart->setAddedDate(new \DateTime());
                         $em->persist($content_cart);
                         $em->flush();
+                        $this->addFlash('success', 'le produit a bien été ajouté au panier');
                     }
                 }else{
                     //on créer un panier
@@ -92,10 +93,11 @@ class DefaultController extends AbstractController
                     $content_cart->setAddedDate(new \DateTime());
                     $em->persist($content_cart);
                     $em->flush();
+                    $this->addFlash('success', 'le produit a bien été ajouté au panier');
                 }
             }
         }else{
-            //flash
+            $this->addFlash('danger', 'Le produit n\' a pas pu être ajouté au panier');
         }
         
         return new JsonResponse($cart);

@@ -1,15 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}Panier{% endblock %}
 
 {% block body %}
 
 {% block stylesheets %}
 <style>
 
-.productDetail{
-    margin-top:90px;
-}
+    .darkNav{
+        background-color: #050505;
+        box-shadow: 2px 2px 3px #000;
+        color:#fff!important;
+    }
+
+    .productDetail{
+        margin-top:90px;
+    }
+
     figure {
         width: 25%;
         object-fit: cover;
@@ -22,10 +29,7 @@
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
     }
-
-
 </style>
-
 {% endblock %}
 
 <section class="productDetail">
@@ -79,18 +83,18 @@
 {% block javascripts %}
 <script>
     async function addInCart(id) {
-        $.ajax({
-            method: "POST",
-            url: "/cart/" + id,
-            async: true,
+        fetch("/cart/" + id, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         })
-            .then(response => {
-
-                console.log(response);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        .then(response => response.json())
+        .then(data => {
+        console.log(data);
+        // faire quelque chose avec les données
+        })
+        .catch(error => console.error(error));
     }
 </script>
 

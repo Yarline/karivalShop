@@ -65,13 +65,13 @@ class ProductRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Product
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findNewProduct(): array
+   {
+       return $this->createQueryBuilder('p')
+        ->orderBy('p.createdAt', 'ASC')
+        ->setMaxResults(8)
+        ->getQuery()
+        ->getResult()
+       ;
+   }
 }
